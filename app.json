@@ -1,16 +1,12 @@
 {
   "expo": {
+    "scheme": "stockimg",
     "name": "stockImgApp",
     "slug": "stockImgApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -18,13 +14,33 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jenish025.stockImgApp",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "stockimg"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.jenish025.stockImgApp",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{
+            "scheme": "stockimg"
+          }],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
