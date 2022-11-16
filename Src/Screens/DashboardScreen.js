@@ -59,15 +59,14 @@ const DashboardScreen = (props) => {
   // useEffect(() => {
   //   if (accessUserCode != '') {
   //     if (Object.keys(accessUserToken).length === 0) {
-  //       console.log('run token api');
   //       getUserAccessToken();
   //     } else {
-  //       console.log('accessToken present');
+
   //       if (Object.keys(userInfoData).length === 0) {
-  //         console.log('run user info api');
+
   //         getUserInformation();
   //       } else {
-  //         console.log('user info is done');
+
   //       }
   //     }
   //   } else {

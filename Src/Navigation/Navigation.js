@@ -8,6 +8,7 @@ import AuthComfromScreen from '../Screens/AuthComfromScreen';
 import FullSizePhtoScreen from '../Screens/FullSizePhtoScreen';
 import FollowersScreen from '../Screens/FollowersScreen';
 import FollowerProfileScreen from '../Screens/FollowerProfileScreen';
+import CollectionPhotoListScreen from '../Screens/CollectionPhotoListScreen';
 // import SplashScreens from '../Screens/SplashScreen';
 
 const Navigation = () => {
@@ -65,7 +66,14 @@ const Navigation = () => {
           title: 'Profile',
           // headerShown: false,
         }}
-       
+      />
+      <Stack.Screen
+        name="CollectionPhotoListScreen"
+        component={CollectionPhotoListScreen}
+        options={{
+          title: 'Collection',
+          // headerShown: false,
+        }}
       />
       <Stack.Screen
         name="DrawerScreen"

@@ -1,4 +1,3 @@
-import { State } from 'react-native-gesture-handler';
 import { USER_COLLECTION_LIST } from '../ReduxConst';
 
 const initialState = {};

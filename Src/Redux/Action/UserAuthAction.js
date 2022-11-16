@@ -54,3 +54,18 @@ export const UserCollectionListAction = (collection) => {
     data: collection,
   };
 };
+
+export const PublicCollectionListAction = (publiccollection) => {
+  return {
+    type: USER_COLLECTION_LIST,
+    data: publiccollection,
+  };
+};
+
+
+export const PublicListListAction = (publicPhotos) => {
+  return {
+    type: USER_COLLECTION_LIST,
+    data: publicPhotos,
+  };
+};

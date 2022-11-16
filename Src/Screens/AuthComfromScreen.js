@@ -8,7 +8,6 @@ import {
   UserAccessToken,
 } from '../Redux/Action/UserAuthAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { test } from '../Api/UserAuthApi';
 import { redirectUri } from '../../appConfigFile';
 
 const AuthComfromScreen = (props) => {

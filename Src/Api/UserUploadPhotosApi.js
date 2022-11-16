@@ -2,12 +2,14 @@
 
 import { UserPhotoUploadLIst } from '../Redux/Action/UserAuthAction';
 import {
+  PUBLIC_COLLECTION_LIST,
   USER_COLLECTION_LIST,
   USER_FOLLOWER_LIST,
   USER_UPLOAD_PHOTOS_LIST,
 } from '../Redux/ReduxConst';
 
-export const getUserUploadPhotos = (url, token) => {
+export const getUserUploadPhotos = (url, token, path) => {
+  console.log(path, 'path')
   return (dispatch) => {
     var requestOptions = {
       method: 'GET',
@@ -22,12 +24,11 @@ export const getUserUploadPhotos = (url, token) => {
         dispatch(
           // UserPhotoUploadLIst(result)
           {
-            type: USER_UPLOAD_PHOTOS_LIST,
+            type: path,
             data: JSON.parse(result),
           }
         );
         return result;
-        c
       })
       .catch((error) => console.log('error', error));
   };
@@ -70,13 +71,32 @@ export const getUserCollectionList = (url, token) => {
     fetch(url, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log(result,'collection')
-        dispatch(          
-          {
-            type: USER_COLLECTION_LIST,
-            data: JSON.parse(result),
-          }
-        );
+        dispatch({
+          type: USER_COLLECTION_LIST,
+          data: JSON.parse(result),
+        });
+        return result;
+      })
+      .catch((error) => console.log('error', error));
+  };
+};
+
+export const getPublicCollectionList = (url, token) => {
+  return (dispatch) => {
+    var requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        dispatch({
+          type: PUBLIC_COLLECTION_LIST,
+          data: JSON.parse(result),
+        });
         return result;
       })
       .catch((error) => console.log('error', error));

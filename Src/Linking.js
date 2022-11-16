@@ -16,6 +16,6 @@ const linking = {
   config
 };
 
-console.log(prefix, 'pre');
+console.log(prefix, 'Link');
 
 export default linking;

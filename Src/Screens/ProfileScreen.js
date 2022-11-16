@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import UserUploadImgCard from '../Componets/UserUploadImgCard';
@@ -14,14 +14,17 @@ import {
   getUserUploadPhotos,
   getUserCollectionList,
 } from '../Api/UserUploadPhotosApi';
+import { USER_UPLOAD_PHOTOS_LIST } from '../Redux/ReduxConst';
 
 const ProfileScreen = (props) => {
   const { userInfoData, accessUserToken, userPhotoList } = props;
 
+  const [barStatus, setBarStatus] = useState('photos');
+
   const getUserUploadPhotosList = (url, token) => {
-    props.getUserUploadPhotos(url, token);
+    props.getUserUploadPhotos(url, token, USER_UPLOAD_PHOTOS_LIST);
     props?.getUserCollectionList(
-      'https://api.unsplash.com/users/jape00/collections',
+      `https://api.unsplash.com/users/${userInfoData?.username}/collections`,
       token
     );
   };
@@ -47,6 +50,10 @@ const ProfileScreen = (props) => {
     props.navigation.navigate('FollowerScreen', {
       item: authList,
     });
+  };
+
+  const handlePhotoCollectionBar = (status) => {
+    setBarStatus(status);
   };
 
   useEffect(() => {
@@ -83,20 +90,36 @@ const ProfileScreen = (props) => {
         <Text style={styles.userUserName}> {userInfoData?.username} </Text>
         <Text style={styles.userBio}> {userInfoData?.bio} </Text>
       </View>
-      <View style={styles.userPhotoList}>
-        {!userPhotoList.errors ? (
-          <FlatList
-            style={styles.photoListContainer}
-            showsVerticalScrollIndicator={false}
-            numColumns={3}
-            data={userPhotoList}
-            keyExtractor={(item) => item?.id}
-            renderItem={({ item }) => <UserUploadImgCard item={item} />}
-          />
-        ) : (
-          <Text> The access token is invalid</Text>
-        )}
+      <View style={styles.photocollectionBar}>
+        <TouchableOpacity onPress={() => handlePhotoCollectionBar('photos')}>
+          <Text>Photos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handlePhotoCollectionBar('Collection')}>
+          <Text>Collection</Text>
+        </TouchableOpacity>
       </View>
+
+      {barStatus === 'photos' ? (
+        <View style={styles.userPhotoList}>
+          {!userPhotoList.errors ? (
+            <FlatList
+              style={styles.photoListContainer}
+              showsVerticalScrollIndicator={false}
+              numColumns={3}
+              data={userPhotoList}
+              keyExtractor={(item) => item?.id}
+              renderItem={({ item }) => <UserUploadImgCard item={item} />}
+            />
+          ) : (
+            <Text> The access token is invalid</Text>
+          )}
+        </View>
+      ) : (
+        <View>
+          <Text>Coolection</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -153,4 +176,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   photoListContainer: {},
+  photocollectionBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    textAlign: 'center',
+    width: '100%',
+    borderColor: '#babac0',
+    borderWidth: 1,
+  },
 });
