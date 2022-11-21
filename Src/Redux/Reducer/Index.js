@@ -1,12 +1,16 @@
 import { combineReducers } from 'redux';
 import { AccessCodeReducer } from './AccessCodeReducer';
 import { AccessTokenReducer } from './AccessTokenReducer';
-import { PublicCollectionPhotosReducer, PublicCollectionReducer } from './PublicCollectionReducer';
+import {
+  PublicCollectionPhotosReducer,
+  PublicCollectionReducer,
+} from './PublicCollectionReducer';
 import { PublicPhotosReducer } from './PublicPhotosReducer';
 import { UserCollectionReducer } from './UserCollectionReducer';
 import { UserFollowerReducer } from './UserFollowerReducer';
 import { UserFollowingReducer } from './UserFollowingReducer';
 import { UserInfoReducer } from './UserInfoReducer';
+import { UserLikesPhotoListReducer } from './UserLikesPhotoListReducer';
 import { UserPhotoUploadListReducer } from './UserPhotoUploadListReducer';
 
 const RootReducer = combineReducers({
@@ -17,6 +21,7 @@ const RootReducer = combineReducers({
   userFollower: UserFollowerReducer,
   userFollowings: UserFollowingReducer,
   userCollection: UserCollectionReducer,
+  userLikeList: UserLikesPhotoListReducer,
   publicCollection: PublicCollectionReducer,
   publicPhotos: PublicPhotosReducer,
   publicCollectionPhotos: PublicCollectionPhotosReducer,

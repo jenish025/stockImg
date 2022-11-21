@@ -1,8 +1,10 @@
 import {
   ActivityIndicator,
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -10,12 +12,17 @@ import { connect } from 'react-redux';
 import { getUserUploadPhotos } from '../Api/UserUploadPhotosApi';
 import UserUploadImgCard from '../Componets/UserUploadImgCard';
 import { PUBLIC_COLLECTION_PHOTOS_LIST } from '../Redux/ReduxConst';
+import MasonryList from '@react-native-seoul/masonry-list';
+import { size } from 'lodash';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MasonryPhotoList from '../Componets/MasonryPhotoList';
 
 const CollectionPhotoListScreen = (props) => {
-  const { accessUserToken, publicCollectionPhotoList } = props;
+  const { accessUserToken, publicCollectionPhotoList, navigation } = props;
   const { route } = props;
   const { params } = route;
 
+  
   const [showLoader, setShowLoader] = useState(true);
 
   const getCollectionPhotosList = (url, token) => {
@@ -36,14 +43,16 @@ const CollectionPhotoListScreen = (props) => {
         <ActivityIndicator size="large" color="#babac0" />
       ) : (
         <View>
+          <View style={styles.collectionBackBarContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back-outline" size={28} />
+            </TouchableOpacity>
+            {/* <Text>name</Text> */}
+          </View>
           {!publicCollectionPhotoList.errors ? (
-            <FlatList
-              style={styles.photoListContainer}
-              showsVerticalScrollIndicator={false}
-              numColumns={3}
-              data={publicCollectionPhotoList}
-              keyExtractor={(item) => item?.id}
-              renderItem={({ item }) => <UserUploadImgCard item={item} />}
+            <MasonryPhotoList
+              photoList={publicCollectionPhotoList}
+              onMomentumScrollEnd={() => console.log('get more img')}
             />
           ) : (
             <Text> The access token is invalid</Text>
@@ -71,4 +80,22 @@ export default connect(
   mapDispatchtoProps
 )(CollectionPhotoListScreen);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  imgCardContainer: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    margin: 5,
+  },
+  collectionBackBarContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    backgroundColor: '#babac0',
+    borderRadius: 50,
+    margin: 8,
+    opacity: 0.5,
+  },
+});

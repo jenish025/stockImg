@@ -1,68 +1,96 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Height, Width } from '../../appConfigFile';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import BottomSheet from '@gorhom/bottom-sheet';
+import * as Animatable from 'react-native-animatable';
+import BottomSheets from '../Componets/BottomSheets';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const FullSizePhtoScreen = (props) => {
-  const { route } = props;
+  const { route, navigation } = props;
   const { params } = route;
   const { item } = params;
+  const [imgRatio, setImgRatio] = useState(1);
+
+  const snapPoints = useMemo(() => ['16%', '90%'], []);
+  const [loader, setLoader] = useState(true);
+
+  useEffect(() => {
+    if (item?.urls?.regular) {
+      Image.getSize(item?.urls?.regular, (width, height) =>
+        setImgRatio(Width / (Height - 34.5))
+      );
+    }
+
+    setTimeout(() => {
+      setLoader(false);
+    }, 3000);
+  }, [Image]);
+
   return (
-    <View style={styles.fullPhotoContainer}>
-      <View style={styles.userProfileContainer}>
-        <View style={styles.userProfileBar}>
-          <Image
-            source={{ uri: item?.user?.profile_image?.large }}
-            style={styles.userProfile}
-          />
-          <Text style={styles.userNameText}>{item?.user?.username}</Text>
-        </View>
-        <View style={styles.mainImgContainer}>
-          <Image
-            source={{ uri: item?.urls?.regular }}
-            style={styles.mainImg}
-          resizeMode='stretch'
-          />
-        </View>
-      </View>
-    </View>
+    <>
+      {loader ? (
+        <ActivityIndicator size="large" color="#babac0" />
+      ) : (
+        <>
+          <View style={styles.collectionBackBarContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back-outline" size={28} />
+            </TouchableOpacity>
+            {/* <Text>name</Text> */}
+          </View>
+          <View style={styles.MainContainer}>
+            <Image
+              source={{ uri: item?.urls?.raw }}
+              style={[
+                {
+                  height: Height - 24,
+                  // width: '100%',
+                  aspectRatio: imgRatio,
+                },
+                styles.mainImg,
+              ]}
+              resizeMode="stretch"
+            />
+            <BottomSheet snapPoints={snapPoints}>
+              <Animatable.View delay={500} duration={1000} animation="fadeInUp">
+                <BottomSheets userData={item} />
+              </Animatable.View>
+            </BottomSheet>
+          </View>
+        </>
+      )}
+    </>
   );
 };
 
-export default FullSizePhtoScreen;
+export default gestureHandlerRootHOC(FullSizePhtoScreen);
 
 const styles = StyleSheet.create({
-  fullPhotoContainer: {
+  MainContainer: {
+    height: Height,
     flex: 1,
-    margin: 5,
   },
-  userProfileContainer: {
-    display: 'flex',
-    backgroundColor: '#babac0',
-    borderRadius: 10,
-    padding: 5,
+  mainImg: {
+    // borderRadius: 5,
   },
-  userProfileBar: {
+  collectionBackBarContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  userProfile: {
-    height: 50,
-    width: 50,
-    borderRadius: 40,
-    marginRight: 15,
-  },
-
-  userNameText: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  mainImgContainer: {
-
-  },
-  mainImg: {
-    marginTop: 10,
-    height: Height/2 ,
-    borderRadius: 10,
+    position: 'absolute',
+    zIndex: 1,
+    backgroundColor: '#babac0',
+    borderRadius: 50,
+    margin: 8,
+    opacity: 0.5,
   },
 });

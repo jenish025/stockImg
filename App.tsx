@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar, View } from 'react-native';
 
 import Navigation from './Src/Navigation/Navigation';
 import linking from './Src/Linking';

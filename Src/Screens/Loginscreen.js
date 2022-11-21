@@ -1,6 +1,5 @@
-import { Button, SafeAreaView, StyleSheet } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text } from 'react-native';
 import React, { useEffect } from 'react';
-import axios from 'axios';
 import * as WebBrowser from 'expo-web-browser';
 import { authUrl } from '../../appConfigFile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +24,7 @@ const Loginscreen = (props) => {
   return (
     <SafeAreaView>
       <Button title="LoginWebLink" onPress={handleLogin} />
+      <Text></Text>
     </SafeAreaView>
   );
 };

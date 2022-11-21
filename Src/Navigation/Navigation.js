@@ -48,7 +48,7 @@ const Navigation = () => {
         component={FullSizePhtoScreen}
         options={{
           title: '',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -56,7 +56,7 @@ const Navigation = () => {
         component={FollowersScreen}
         options={{
           title: '',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -64,7 +64,7 @@ const Navigation = () => {
         component={FollowerProfileScreen}
         options={{
           title: 'Profile',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -72,7 +72,7 @@ const Navigation = () => {
         component={CollectionPhotoListScreen}
         options={{
           title: 'Collection',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen

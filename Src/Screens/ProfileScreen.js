@@ -1,6 +1,6 @@
 import {
+  FlatList,
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -8,18 +8,30 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { FlatList } from 'react-native-gesture-handler';
 import UserUploadImgCard from '../Componets/UserUploadImgCard';
 import {
   getUserUploadPhotos,
   getUserCollectionList,
 } from '../Api/UserUploadPhotosApi';
-import { USER_UPLOAD_PHOTOS_LIST } from '../Redux/ReduxConst';
+import { USER_LIKES_LIST, USER_UPLOAD_PHOTOS_LIST } from '../Redux/ReduxConst';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { size } from 'lodash';
+import MasonryPhotoList from '../Componets/MasonryPhotoList';
+import PreviewCollectionPhotos from '../Componets/PreviewCollectionPhotos';
+import { Width } from '../../appConfigFile';
 
 const ProfileScreen = (props) => {
-  const { userInfoData, accessUserToken, userPhotoList } = props;
+  const {
+    userInfoData,
+    accessUserToken,
+    userPhotoList,
+    navigation,
+    userLikesPhotoList,
+    userCollection,
+  } = props;
 
-  const [barStatus, setBarStatus] = useState('photos');
+
+  const [activeIndex, setActiveIndex] = useState('photos');
 
   const getUserUploadPhotosList = (url, token) => {
     props.getUserUploadPhotos(url, token, USER_UPLOAD_PHOTOS_LIST);
@@ -27,6 +39,10 @@ const ProfileScreen = (props) => {
       `https://api.unsplash.com/users/${userInfoData?.username}/collections`,
       token
     );
+  };
+
+  const getUserLikePhotoList = (url, token) => {
+    props.getUserUploadPhotos(url, token, USER_LIKES_LIST);
   };
 
   const handleuserFollowerPage = () => {
@@ -57,70 +73,125 @@ const ProfileScreen = (props) => {
   };
 
   useEffect(() => {
+    // setActiveIndex('photos');
     getUserUploadPhotosList(
       userInfoData?.links?.photos,
       accessUserToken?.access_token
     );
-  }, []);
+    getUserLikePhotoList(
+      userInfoData?.links?.likes,
+      accessUserToken?.access_token
+    );
+  }, [activeIndex]);
 
   return (
-    <SafeAreaView style={styles.profileMainContainer}>
-      <View style={styles.profileUser}>
-        <Image
-          source={{ uri: userInfoData?.profile_image?.large }}
-          style={styles.profileImg}
-        />
-        <TouchableOpacity style={styles.justifyContent}>
-          <Text>Post</Text>
-          <Text style={styles.textAlign}>{userInfoData?.total_photos}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleuserFollowerPage}>
-          <Text>Followers</Text>
-          <Text style={styles.textAlign}>{userInfoData?.followers_count}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleuserFollowingPage}>
-          <Text>Following</Text>
-          <Text style={styles.textAlign}>{userInfoData?.following_count}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.userNameContainer}>
-        <Text style={styles.userFullName}>
-          {userInfoData?.first_name} {userInfoData?.last_name}
-        </Text>
-        <Text style={styles.userUserName}> {userInfoData?.username} </Text>
-        <Text style={styles.userBio}> {userInfoData?.bio} </Text>
-      </View>
-      <View style={styles.photocollectionBar}>
-        <TouchableOpacity onPress={() => handlePhotoCollectionBar('photos')}>
-          <Text>Photos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handlePhotoCollectionBar('Collection')}>
-          <Text>Collection</Text>
-        </TouchableOpacity>
-      </View>
-
-      {barStatus === 'photos' ? (
-        <View style={styles.userPhotoList}>
-          {!userPhotoList.errors ? (
-            <FlatList
-              style={styles.photoListContainer}
-              showsVerticalScrollIndicator={false}
-              numColumns={3}
-              data={userPhotoList}
-              keyExtractor={(item) => item?.id}
-              renderItem={({ item }) => <UserUploadImgCard item={item} />}
+    <>
+      <View style={styles.ProfileMainContainer}>
+        <View style={styles.ProfileTopBarContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backIcon}>
+            <Ionicons name="arrow-back-outline" size={28} />
+          </TouchableOpacity>
+          <Text style={styles.userNameFullText}>
+            {userInfoData?.first_name} {userInfoData?.last_name}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Ionicons name="reorder-three-outline" size={34} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.ProfileContainer}>
+          <Image
+            source={{ uri: userInfoData?.profile_image?.large }}
+            style={styles.profileImg}
+          />
+          <Text style={styles.userNameText}>@{userInfoData?.username}</Text>
+          <View style={styles.userStatusInfoContainer}>
+            <View style={styles.userStatus}>
+              <Text style={styles.textCounts}>
+                {userInfoData?.total_photos}
+              </Text>
+              <Text style={styles.followersText}>Photos</Text>
+            </View>
+            <TouchableOpacity onPress={() => handleuserFollowerPage()}>
+              <View style={styles.userStatus}>
+                <Text style={styles.textCounts}>
+                  {userInfoData?.followers_count}
+                </Text>
+                <Text style={styles.followersText}>Followers</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleuserFollowingPage()}>
+              <View style={styles.userStatus}>
+                <Text style={styles.textCounts}>
+                  {userInfoData?.following_count}
+                </Text>
+                <Text style={styles.followersText}>Following</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.ProfileOptionContainer}>
+          <TouchableOpacity
+            onPress={() => setActiveIndex('photos')}
+            style={[
+              styles.photosOption,
+              activeIndex === 'photos' && styles.activeState,
+            ]}>
+            <Ionicons name="images-outline" size={25} />
+            <Text style={[styles.followersText, { marginLeft: 5 }]}>
+              Photos
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveIndex('likes')}
+            style={[
+              styles.photosOption,
+              activeIndex === 'likes' && styles.activeState,
+            ]}>
+            <Ionicons name="heart-outline" size={25} />
+            <Text style={[styles.followersText, { marginLeft: 5 }]}>Likes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveIndex('collection')}
+            style={[
+              styles.photosOption,
+              activeIndex === 'collection' && styles.activeState,
+            ]}>
+            <Ionicons name="bookmarks-outline" size={25} />
+            <Text style={[styles.followersText, { marginLeft: 5 }]}>
+              Collections
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.ProfilePhotosContainer}>
+          {activeIndex === 'photos' ? (
+            <MasonryPhotoList
+              photoList={userPhotoList}
+              onMomentumScrollEnd={() => console.log('more img det')}
+            />
+          ) : activeIndex === 'likes' ? (
+            <MasonryPhotoList
+              photoList={userLikesPhotoList}
+              onMomentumScrollEnd={() => console.log('more img det')}
             />
           ) : (
-            <Text> The access token is invalid</Text>
+            activeIndex === 'collection' && (
+              <FlatList
+                style={styles.CollectionContainer}
+                // horizontal={true}
+                // showsHorizontalScrollIndicator={false}
+                data={userCollection}
+                keyExtractor={(item) => item?.id}
+                renderItem={({ item }) => (
+                  <PreviewCollectionPhotos item={item} widthFrom={'profile'} />
+                )}
+              />
+            )
           )}
         </View>
-      ) : (
-        <View>
-          <Text>Coolection</Text>
-        </View>
-      )}
-    </SafeAreaView>
+      </View>
+    </>
   );
 };
 
@@ -129,6 +200,8 @@ const mapStatetoProps = (state) => {
     userInfoData: state.userInfo,
     accessUserToken: state.accessToken,
     userPhotoList: state.photoList,
+    userLikesPhotoList: state.userLikeList,
+    userCollection: state.userCollection,
   };
 };
 
@@ -140,50 +213,85 @@ const mapDispatchtoProps = {
 export default connect(mapStatetoProps, mapDispatchtoProps)(ProfileScreen);
 
 const styles = StyleSheet.create({
-  profileMainContainer: {
+  ProfileMainContainer: {
+    padding: 4,
     flex: 1,
-    margin: 10,
+    display: 'flex',
   },
-  profileUser: {
+  ProfileTopBarContainer: {
+    flex: 0.8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  profileImg: {
-    height: 100,
-    width: 100,
+  backIcon: {
+    backgroundColor: '#babac0',
     borderRadius: 50,
+    marginRight: 5,
+    opacity: 0.6,
   },
-
-  textAlign: {
-    textAlign: 'center',
-  },
-  userNameContainer: {
-    marginTop: 10,
-  },
-  userFullName: {
+  userNameFullText: {
     fontSize: 18,
-    fontWeight: '600',
+    marginLeft: 2,
+    fontWeight: '500',
+    fontStyle: 'italic',
+    marginBottom: 3,
   },
-  userUserName: {
-    fontSize: 12,
+  ProfileContainer: {
+    flex: 4,
+    alignItems: 'center',
+    padding: 5,
   },
-  userBio: {
-    marginTop: 5,
-    fontSize: 10,
+  profileImg: {
+    height: 150,
+    width: 150,
+    borderRadius: 100,
   },
-  userPhotoList: {
-    marginTop: 10,
+  userNameText: {
+    fontSize: 15,
+    fontWeight: '500',
+    fontStyle: 'italic',
+    marginTop: 4,
   },
-  photoListContainer: {},
-  photocollectionBar: {
-    display: 'flex',
+  userStatusInfoContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
-    textAlign: 'center',
-    width: '100%',
-    borderColor: '#babac0',
-    borderWidth: 1,
+    width: '70%',
+    marginTop: 4,
+  },
+  userStatus: {
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  textCounts: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  followersText: {
+    fontSize: 14,
+    fontWeight: '500',
+    fontStyle: 'italic',
+  },
+  ProfileOptionContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+  },
+  photosOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+  },
+  activeState: {
+    backgroundColor: '#babac0',
+    borderRadius: 15,
+  },
+  ProfilePhotosContainer: {
+    flex: 7,
+  },
+  CollectionContainer: {
+    padding: 2,
+    width: Width,
   },
 });

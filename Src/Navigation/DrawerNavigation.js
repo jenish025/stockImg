@@ -12,7 +12,7 @@ const DrawerNavigation = (props) => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
-        // headerShown: false,
+        headerShown: false,
         drawerLabelStyle: {
           marginLeft: -20,
           fontSize: 15,
@@ -25,6 +25,7 @@ const DrawerNavigation = (props) => {
           drawerIcon: ({ color }) => (
             <Ionicons name="home-outline" size={22} color={color} />
           ),
+          headerShown: false,
         }}
       />
       <Drawer.Screen

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -8,14 +8,14 @@ import {
   UserAccessToken,
 } from '../Redux/Action/UserAuthAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { redirectUri } from '../../appConfigFile';
+import { client_id, client_secret, redirectUri } from '../../appConfigFile';
 
 const AuthComfromScreen = (props) => {
   const { accessUserCode, accessUserToken, userInfoData } = props;
   const [userInfo, setUserInfo] = useState({});
 
   const getUserToken = async (code) => {
-    const url = `https://unsplash.com/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}&client_id=p4ujNBL74OUjCLjSFjhohACuKCQFKoXvyvO26GLFrOM&client_secret=iTdCCrRWfUCu_4axVPHzd79Fu4pRght9fvGf1GHIH1g`;
+    const url = `https://unsplash.com/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}&client_id=${client_id}&client_secret=${client_secret}`;
     axios.post(url).then(async (response) => {
       props?.userAccessToken(response?.data);
       const jsonValue = JSON.stringify(response?.data);
@@ -36,10 +36,9 @@ const AuthComfromScreen = (props) => {
     };
 
     await axios(options).then((response) => {
-
       props?.userInfo(response?.data);
       setUserInfo(response?.data);
-      props.navigation.replace('DrawerScreen', { item: response?.data });
+      props?.navigation.replace('DrawerScreen', { item: response?.data });
     });
   };
 
@@ -57,7 +56,7 @@ const AuthComfromScreen = (props) => {
 
   return (
     <View>
-      <Text>AuthComfromScreen</Text>
+      <ActivityIndicator size="large" color="#babac0" />
     </View>
   );
 };
