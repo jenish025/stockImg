@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -38,7 +39,7 @@ const CollectionPhotoListScreen = (props) => {
     }, 1000);
   }, []);
   return (
-    <View>
+    <SafeAreaView>
       {showLoader ? (
         <ActivityIndicator size="large" color="#babac0" />
       ) : (
@@ -59,7 +60,7 @@ const CollectionPhotoListScreen = (props) => {
           )}
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

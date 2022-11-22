@@ -1,6 +1,8 @@
 import {
   ActivityIndicator,
   Image,
+  Platform,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -41,31 +43,36 @@ const FullSizePhtoScreen = (props) => {
         <ActivityIndicator size="large" color="#babac0" />
       ) : (
         <>
-          <View style={styles.collectionBackBarContainer}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="arrow-back-outline" size={28} />
-            </TouchableOpacity>
-            {/* <Text>name</Text> */}
-          </View>
-          <View style={styles.MainContainer}>
-            <Image
-              source={{ uri: item?.urls?.raw }}
-              style={[
-                {
-                  height: Height - 24,
-                  // width: '100%',
-                  aspectRatio: imgRatio,
-                },
-                styles.mainImg,
-              ]}
-              resizeMode="stretch"
-            />
-            <BottomSheet snapPoints={snapPoints}>
-              <Animatable.View delay={500} duration={1000} animation="fadeInUp">
-                <BottomSheets userData={item} />
-              </Animatable.View>
-            </BottomSheet>
-          </View>
+          <>
+            <View style={styles.collectionBackBarContainer}>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Ionicons name="arrow-back-outline" size={28} />
+              </TouchableOpacity>
+              {/* <Text>name</Text> */}
+            </View>
+            <View style={styles.MainContainer}>
+              <Image
+                source={{ uri: item?.urls?.raw }}
+                style={[
+                  {
+                    height: Height - 24,
+                    // width: '100%',
+                    aspectRatio: imgRatio,
+                  },
+                  styles.mainImg,
+                ]}
+                resizeMode="stretch"
+              />
+              <BottomSheet snapPoints={snapPoints}>
+                <Animatable.View
+                  delay={500}
+                  duration={1000}
+                  animation="fadeInUp">
+                  <BottomSheets userData={item}  />
+                </Animatable.View>
+              </BottomSheet>
+            </View>
+          </>
         </>
       )}
     </>
@@ -78,6 +85,7 @@ const styles = StyleSheet.create({
   MainContainer: {
     height: Height,
     flex: 1,
+    // marginTop: Platform.OS === 'ios' ? 33 : 0,
   },
   mainImg: {
     // borderRadius: 5,
@@ -92,5 +100,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     margin: 8,
     opacity: 0.5,
+    top: Platform.OS === 'ios' ? 40 : 0,
   },
 });

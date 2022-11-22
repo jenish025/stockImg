@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -29,7 +30,7 @@ const FollowersScreen = (props) => {
 
   return (
     <>
-      <View style={styles.followMainContainer}>
+      <SafeAreaView style={styles.followMainContainer}>
         <View style={styles.followTopbar}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -49,7 +50,7 @@ const FollowersScreen = (props) => {
             />
           )}
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

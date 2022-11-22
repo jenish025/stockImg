@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -80,7 +81,7 @@ const FollowerProfileScreen = (props) => {
 
   return (
     <>
-      <View style={styles.ProfileMainContainer}>
+      <SafeAreaView style={styles.ProfileMainContainer}>
         <View style={styles.ProfileTopBarContainer}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -178,7 +179,7 @@ const FollowerProfileScreen = (props) => {
             )
           )}
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

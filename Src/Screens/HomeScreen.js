@@ -71,7 +71,7 @@ const HomeScreen = (props) => {
   }, []);
 
   return (
-    <View style={styles.homeMainContainer}>
+    <SafeAreaView style={styles.homeMainContainer}>
       <View style={styles.homeTopbar}>
         <TouchableOpacity onPress={() => handleOpenDrwer()}>
           <Ionicons name="reorder-three-outline" size={33} />
@@ -106,7 +106,7 @@ const HomeScreen = (props) => {
           <Text> The access token is invalid</Text>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

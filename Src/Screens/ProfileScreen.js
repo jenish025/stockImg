@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -86,7 +87,7 @@ const ProfileScreen = (props) => {
 
   return (
     <>
-      <View style={styles.ProfileMainContainer}>
+      <SafeAreaView style={styles.ProfileMainContainer}>
         <View style={styles.ProfileTopBarContainer}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -190,7 +191,7 @@ const ProfileScreen = (props) => {
             )
           )}
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
